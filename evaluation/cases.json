@@ -1,0 +1,2144 @@
+[
+  {
+    "id": "A1",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？",
+        "guide": "student-id",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "申请表",
+          "学籍服务窗口",
+          "领取新证"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "A2",
+    "turns": [
+      {
+        "input": "一卡通丢了",
+        "guide": "campus-card",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "挂失",
+          "校园卡服务窗口",
+          "领取新卡"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "A3",
+    "turns": [
+      {
+        "input": "我要补办证件",
+        "sections": [],
+        "contains": [
+          "学生证补办",
+          "校园卡补办",
+          "？"
+        ]
+      },
+      {
+        "input": "学生证补办怎么办？",
+        "guide": "student-id",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "申请表",
+          "领取新证"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "B1",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？",
+        "guide": "student-id",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "学籍服务窗口"
+        ]
+      },
+      {
+        "input": "我已有申请表和证件照，还差什么？",
+        "guide": "student-id",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "缺少：遗失说明",
+          "待确认：无"
+        ],
+        "material": {
+          "provided_items": [
+            "申请表",
+            "证件照"
+          ],
+          "conditions": {
+            "补办原因": "遗失"
+          },
+          "missing": [
+            "遗失说明"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "B2",
+    "turns": [
+      {
+        "input": "学生证补办需要什么材料？",
+        "guide": "student-id",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "遗失说明",
+          "旧证",
+          "请确认"
+        ],
+        "material": {
+          "provided_items": [],
+          "conditions": {},
+          "missing": [
+            "申请表",
+            "证件照"
+          ],
+          "pending": [
+            "遗失说明",
+            "旧证"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "B3",
+    "turns": [
+      {
+        "input": "我的学生证丢了，怎么办？",
+        "guide": "student-id",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "学籍服务窗口"
+        ]
+      },
+      {
+        "input": "改问校园卡补办，我已有身份证，还差什么？",
+        "guide": "campus-card",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：身份证件",
+          "原校园卡",
+          "待确认"
+        ],
+        "material": {
+          "provided_items": [
+            "身份证"
+          ],
+          "conditions": {},
+          "missing": [],
+          "pending": [
+            "原校园卡"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "C1",
+    "turns": [
+      {
+        "input": "我要申请护照，怎么办？",
+        "sections": [],
+        "contains": [
+          "无法核实"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "fault": "remove_guide",
+    "turns": [
+      {
+        "input": "补办学生证该去哪个窗口？",
+        "guide": "student-id",
+        "sections": [],
+        "contains": [
+          "暂时不可用",
+          "无法核实"
+        ],
+        "status": "unavailable"
+      }
+    ]
+  },
+  {
+    "id": "C3",
+    "fault": "http_timeout",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？"
+      },
+      {
+        "input": "我已有申请表和证件照，还差什么？",
+        "fault": "timeout"
+      },
+      {
+        "input": "我已有申请表和证件照，还差什么？"
+      }
+    ]
+  },
+  {
+    "id": "C4",
+    "fault": "invalid_rule",
+    "turns": [
+      {
+        "input": "学生证补办需要什么材料？",
+        "guide": "student-id",
+        "sections": [],
+        "contains": [
+          "规则校验失败",
+          "暂时无法核对"
+        ],
+        "status": "rule_error"
+      }
+    ]
+  },
+  {
+    "id": "D1",
+    "fault": "pii_fixture",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？ 我的邮箱是 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第1轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第2轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第3轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第4轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第5轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第6轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第7轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      },
+      {
+        "input": "第8轮复述：学生证补办怎么办？ 邮箱 fixture@example.invalid，学号：123456789012。"
+      }
+    ]
+  },
+  {
+    "id": "D2",
+    "fault": "summary_fixture",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？"
+      },
+      {
+        "input": "第1轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第2轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第3轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第4轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第5轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第6轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第7轮：学生证补办怎么办？"
+      },
+      {
+        "input": "第8轮：学生证补办怎么办？"
+      },
+      {
+        "input": "我已有申请表和证件照，还差什么？"
+      }
+    ]
+  },
+  {
+    "id": "E01",
+    "turns": [
+      {
+        "input": "补办学生证该去哪个窗口",
+        "guide": "student-id",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "学籍服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "补办学生证该去哪个窗口"
+  },
+  {
+    "id": "E02",
+    "turns": [
+      {
+        "input": "学生证补办申请表从哪儿下载？",
+        "guide": "student-id",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟教务服务台",
+          "学籍服务"
+        ]
+      }
+    ],
+    "retrieval_query": "学生证补办申请表从哪儿下载？"
+  },
+  {
+    "id": "E03",
+    "turns": [
+      {
+        "input": "一卡通丢了去哪个窗口办理？",
+        "guide": "campus-card",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "校园卡服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "一卡通丢了去哪个窗口办理？"
+  },
+  {
+    "id": "E04",
+    "turns": [
+      {
+        "input": "我的一卡通丢了，怎么办？",
+        "guide": "campus-card",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "挂失",
+          "携带",
+          "领取"
+        ]
+      }
+    ],
+    "retrieval_query": "我的一卡通丢了，怎么办？"
+  },
+  {
+    "id": "E05",
+    "turns": [
+      {
+        "input": "成绩单审核通过后在哪儿取？",
+        "guide": "transcript",
+        "sections": [
+          "领取地点"
+        ],
+        "contains": [
+          "教务服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "成绩单审核通过后在哪儿取？"
+  },
+  {
+    "id": "E06",
+    "turns": [
+      {
+        "input": "成绩单在哪儿申请、在哪儿取？",
+        "guide": "transcript",
+        "sections": [
+          "申请入口",
+          "领取地点"
+        ],
+        "contains": [
+          "成绩管理",
+          "教务服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "成绩单在哪儿申请、在哪儿取？"
+  },
+  {
+    "id": "E07",
+    "turns": [
+      {
+        "input": "学籍证明在哪儿申请？",
+        "guide": "enrollment",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "学籍服务",
+          "在读证明"
+        ]
+      }
+    ],
+    "retrieval_query": "学籍证明在哪儿申请？"
+  },
+  {
+    "id": "E08",
+    "turns": [
+      {
+        "input": "在读证明怎么申请？",
+        "guide": "enrollment",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "填写",
+          "提交",
+          "下载"
+        ]
+      }
+    ],
+    "retrieval_query": "在读证明怎么申请？"
+  },
+  {
+    "id": "E09",
+    "turns": [
+      {
+        "input": "寝室报修从哪个入口提交？",
+        "guide": "dorm-repair",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟后勤服务台",
+          "宿舍服务"
+        ]
+      }
+    ],
+    "retrieval_query": "寝室报修从哪个入口提交？"
+  },
+  {
+    "id": "E10",
+    "turns": [
+      {
+        "input": "宿舍报修的处理步骤是什么？",
+        "guide": "dorm-repair",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "工单",
+          "维修进度",
+          "确认"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍报修的处理步骤是什么？"
+  },
+  {
+    "id": "E11",
+    "turns": [
+      {
+        "input": "学生证补办窗口周末开吗？",
+        "guide": "student-id",
+        "sections": [],
+        "contains": [
+          "开放时间",
+          "无法核实"
+        ]
+      }
+    ],
+    "retrieval_query": null
+  },
+  {
+    "id": "E12",
+    "turns": [
+      {
+        "input": "校园卡补办要交多少费用？",
+        "guide": "campus-card",
+        "sections": [],
+        "contains": [
+          "费用",
+          "无法核实"
+        ]
+      }
+    ],
+    "retrieval_query": null
+  },
+  {
+    "id": "E13",
+    "turns": [
+      {
+        "input": "上课请假的申请入口在哪？",
+        "guide": "student-leave",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟学工服务台",
+          "请假申请"
+        ]
+      }
+    ],
+    "retrieval_query": "上课请假的申请入口在哪？"
+  },
+  {
+    "id": "E14",
+    "turns": [
+      {
+        "input": "课程补退选的办理流程是什么？",
+        "guide": "course-adjustment",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "课程班",
+          "提交",
+          "个人课表"
+        ]
+      }
+    ],
+    "retrieval_query": "课程补退选的办理流程是什么？"
+  },
+  {
+    "id": "E15",
+    "turns": [
+      {
+        "input": "借书续借从哪个入口提交？",
+        "guide": "library-renewal",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟图书馆服务台",
+          "我的借阅"
+        ]
+      }
+    ],
+    "retrieval_query": "借书续借从哪个入口提交？"
+  },
+  {
+    "id": "E16",
+    "turns": [
+      {
+        "input": "调换宿舍该去哪个窗口交接？",
+        "guide": "dorm-transfer",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "模拟学生公寓服务中心",
+          "住宿服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "调换宿舍该去哪个窗口交接？"
+  },
+  {
+    "id": "E17",
+    "turns": [
+      {
+        "input": "学费发票哪里领取？",
+        "guide": "tuition-invoice",
+        "sections": [
+          "领取地点"
+        ],
+        "contains": [
+          "模拟财务服务台",
+          "电子票据"
+        ]
+      }
+    ],
+    "retrieval_query": "学费发票哪里领取？"
+  },
+  {
+    "id": "E18",
+    "turns": [
+      {
+        "input": "校奖学金怎么申请？",
+        "guide": "scholarship",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "评审学年",
+          "奖学金申请表",
+          "成绩记录",
+          "提交"
+        ]
+      }
+    ],
+    "retrieval_query": "校奖学金怎么申请？"
+  },
+  {
+    "id": "F01",
+    "turns": [
+      {
+        "input": "我想换宿舍，怎么办？",
+        "guide": "dorm-transfer",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "宿舍调换申请单",
+          "床位安排",
+          "交接"
+        ]
+      },
+      {
+        "input": "我已有调宿申请单，还差什么？",
+        "guide": "dorm-transfer",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：宿舍调换申请单",
+          "缺少：现住宿信息",
+          "待确认：无"
+        ],
+        "material": {
+          "provided_items": [
+            "调宿申请单"
+          ],
+          "conditions": {},
+          "missing": [
+            "现住宿信息"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "F02",
+    "turns": [
+      {
+        "input": "学生证丢了，怎么办？",
+        "guide": "student-id",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "申请表",
+          "学籍服务窗口",
+          "领取新证"
+        ]
+      },
+      {
+        "input": "改问上课请假，我已有请假单，还差什么？",
+        "guide": "student-leave",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：请假申请单",
+          "缺少：受影响课程清单",
+          "待确认：无"
+        ],
+        "material": {
+          "provided_items": [
+            "请假单"
+          ],
+          "conditions": {},
+          "missing": [
+            "受影响课程清单"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "F03",
+    "turns": [
+      {
+        "input": "校奖学金怎么申请？",
+        "guide": "scholarship",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "评审学年",
+          "奖学金申请表",
+          "成绩记录",
+          "提交"
+        ]
+      },
+      {
+        "input": "我已有成绩单，还差什么？",
+        "guide": "scholarship",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：评审学年成绩记录",
+          "缺少：奖学金申请表",
+          "待确认：无"
+        ],
+        "material": {
+          "provided_items": [
+            "成绩单"
+          ],
+          "conditions": {},
+          "missing": [
+            "奖学金申请表"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "E19",
+    "turns": [
+      {
+        "input": "校园网密码重置的申请入口在哪？",
+        "guide": "network-account",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟网络服务台",
+          "账号找回"
+        ]
+      }
+    ],
+    "retrieval_query": "校园网密码重置的申请入口在哪？"
+  },
+  {
+    "id": "E20",
+    "turns": [
+      {
+        "input": "我想办理休学，怎么办？",
+        "guide": "study-suspension",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "休学申请表",
+          "休学事由说明",
+          "学籍状态"
+        ]
+      }
+    ],
+    "retrieval_query": "我想办理休学，怎么办？"
+  },
+  {
+    "id": "E21",
+    "turns": [
+      {
+        "input": "复学申请的办理流程是什么？",
+        "guide": "study-resumption",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "复学申请表",
+          "休学审批记录",
+          "复学学期"
+        ]
+      }
+    ],
+    "retrieval_query": "复学申请的办理流程是什么？"
+  },
+  {
+    "id": "E22",
+    "turns": [
+      {
+        "input": "改学籍信息应该从哪个入口提交？",
+        "guide": "academic-record-correction",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟教务服务台",
+          "信息更正"
+        ]
+      }
+    ],
+    "retrieval_query": "改学籍信息应该从哪个入口提交？"
+  },
+  {
+    "id": "E23",
+    "turns": [
+      {
+        "input": "体育馆预约在哪儿申请？",
+        "guide": "sports-booking",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟体育服务台",
+          "可预约场次"
+        ]
+      }
+    ],
+    "retrieval_query": "体育馆预约在哪儿申请？"
+  },
+  {
+    "id": "E24",
+    "turns": [
+      {
+        "input": "访客入校的办理流程是什么？",
+        "guide": "visitor-booking",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "校内接待",
+          "审核",
+          "入校凭证"
+        ]
+      }
+    ],
+    "retrieval_query": "访客入校的办理流程是什么？"
+  },
+  {
+    "id": "E25",
+    "turns": [
+      {
+        "input": "社团借场地从哪个入口申请？",
+        "guide": "club-venue",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "模拟学工服务台",
+          "社团服务"
+        ]
+      }
+    ],
+    "retrieval_query": "社团借场地从哪个入口申请？"
+  },
+  {
+    "id": "E26",
+    "turns": [
+      {
+        "input": "实习盖章该去哪个窗口？",
+        "guide": "internship-stamp",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "模拟学生事务大厅",
+          "就业服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "实习盖章该去哪个窗口？"
+  },
+  {
+    "id": "E27",
+    "turns": [
+      {
+        "input": "校园失物招领在哪里领取？",
+        "guide": "lost-property",
+        "sections": [
+          "领取地点"
+        ],
+        "contains": [
+          "通知",
+          "失物保管点"
+        ]
+      }
+    ],
+    "retrieval_query": "校园失物招领在哪里领取？"
+  },
+  {
+    "id": "F04",
+    "turns": [
+      {
+        "input": "复学申请的办理流程是什么？",
+        "guide": "study-resumption",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "复学申请表",
+          "休学审批记录",
+          "复学学期"
+        ]
+      },
+      {
+        "input": "我已有复学申请表，还差什么？",
+        "guide": "study-resumption",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：复学申请表",
+          "缺少：原休学审批记录",
+          "待确认：无"
+        ],
+        "material": {
+          "provided_items": [
+            "复学申请表"
+          ],
+          "conditions": {},
+          "missing": [
+            "原休学审批记录"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "F05",
+    "turns": [
+      {
+        "input": "体育馆预约要交多少费用？",
+        "guide": "sports-booking",
+        "sections": [],
+        "contains": [
+          "费用",
+          "无法核实"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "E28",
+    "turns": [
+      {
+        "input": "新生入学报到的办理流程是什么？",
+        "guide": "freshman-checkin",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "登录迎新页面核对报到清单"
+        ]
+      }
+    ],
+    "retrieval_query": "新生入学报到的办理流程是什么？"
+  },
+  {
+    "id": "E29",
+    "turns": [
+      {
+        "input": "开学注册在哪儿申请？",
+        "guide": "semester-registration",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "学籍管理 / 学期注册"
+        ]
+      }
+    ],
+    "retrieval_query": "开学注册在哪儿申请？"
+  },
+  {
+    "id": "E30",
+    "turns": [
+      {
+        "input": "毕业档案转寄去哪办？",
+        "guide": "student-file",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "学生档案服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "毕业档案转寄去哪办？"
+  },
+  {
+    "id": "E31",
+    "turns": [
+      {
+        "input": "转专业的申请入口在哪？",
+        "guide": "major-transfer",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "学籍管理 / 转专业"
+        ]
+      }
+    ],
+    "retrieval_query": "转专业的申请入口在哪？"
+  },
+  {
+    "id": "E32",
+    "turns": [
+      {
+        "input": "辅修专业怎么申请？",
+        "guide": "minor-program",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "查看辅修目录和课程安排"
+        ]
+      }
+    ],
+    "retrieval_query": "辅修专业怎么申请？"
+  },
+  {
+    "id": "E33",
+    "turns": [
+      {
+        "input": "我的课表在哪里查？",
+        "guide": "schedule-query",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "我的课程 / 学期课表"
+        ]
+      }
+    ],
+    "retrieval_query": "我的课表在哪里查？"
+  },
+  {
+    "id": "E34",
+    "turns": [
+      {
+        "input": "期末考试地点在哪里查？",
+        "guide": "exam-arrangement",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "考试服务 / 考试安排"
+        ]
+      }
+    ],
+    "retrieval_query": "期末考试地点在哪里查？"
+  },
+  {
+    "id": "E35",
+    "turns": [
+      {
+        "input": "缓考申请的办理流程是什么？",
+        "guide": "exam-deferral",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "选择对应考试"
+        ]
+      }
+    ],
+    "retrieval_query": "缓考申请的办理流程是什么？"
+  },
+  {
+    "id": "E36",
+    "turns": [
+      {
+        "input": "补考在哪儿报名，入口是什么？",
+        "guide": "makeup-exam",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "考试服务 / 补考报名"
+        ]
+      }
+    ],
+    "retrieval_query": "补考在哪儿报名，入口是什么？"
+  },
+  {
+    "id": "E37",
+    "turns": [
+      {
+        "input": "挂科重修怎么申请？",
+        "guide": "course-retake",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "选择允许重修的课程及教学班"
+        ]
+      }
+    ],
+    "retrieval_query": "挂科重修怎么申请？"
+  },
+  {
+    "id": "E38",
+    "turns": [
+      {
+        "input": "成绩复查从哪个入口申请？",
+        "guide": "grade-review",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "成绩服务 / 成绩复核"
+        ]
+      }
+    ],
+    "retrieval_query": "成绩复查从哪个入口申请？"
+  },
+  {
+    "id": "E39",
+    "turns": [
+      {
+        "input": "毕业学分够不够在哪里查？",
+        "guide": "graduation-audit",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "毕业服务 / 资格自查"
+        ]
+      }
+    ],
+    "retrieval_query": "毕业学分够不够在哪里查？"
+  },
+  {
+    "id": "E40",
+    "turns": [
+      {
+        "input": "毕业离校手续的办理流程是什么？",
+        "guide": "graduation-clearance",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "打开离校清单逐项查看借阅、住宿及费用结清状态"
+        ]
+      }
+    ],
+    "retrieval_query": "毕业离校手续的办理流程是什么？"
+  },
+  {
+    "id": "E41",
+    "turns": [
+      {
+        "input": "毕业证领取要到哪里？",
+        "guide": "certificate-pickup",
+        "sections": [
+          "领取地点"
+        ],
+        "contains": [
+          "证书发放点"
+        ]
+      }
+    ],
+    "retrieval_query": "毕业证领取要到哪里？"
+  },
+  {
+    "id": "E42",
+    "turns": [
+      {
+        "input": "新生宿舍入住的办理流程是什么？",
+        "guide": "dorm-checkin",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "核对分配的楼栋和床位"
+        ]
+      }
+    ],
+    "retrieval_query": "新生宿舍入住的办理流程是什么？"
+  },
+  {
+    "id": "E43",
+    "turns": [
+      {
+        "input": "宿舍退房去哪办？",
+        "guide": "dorm-checkout",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "原楼栋的宿管值班点"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍退房去哪办？"
+  },
+  {
+    "id": "E44",
+    "turns": [
+      {
+        "input": "宿舍门禁刷不开怎么办？",
+        "guide": "dorm-access",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "向本楼宿管登记楼栋、房间和故障现象"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍门禁刷不开怎么办？"
+  },
+  {
+    "id": "E45",
+    "turns": [
+      {
+        "input": "宿舍电费余额在哪里查？",
+        "guide": "dorm-electricity",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "宿舍缴费 / 电费"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍电费余额在哪里查？"
+  },
+  {
+    "id": "E46",
+    "turns": [
+      {
+        "input": "寝室没有热水怎么办？",
+        "guide": "dorm-hot-water",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "先查看本楼供水公告"
+        ]
+      }
+    ],
+    "retrieval_query": "寝室没有热水怎么办？"
+  },
+  {
+    "id": "E47",
+    "turns": [
+      {
+        "input": "洗衣机扣费后没启动怎么办？",
+        "guide": "laundry-service",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "在页面查看设备位置与空闲状态"
+        ]
+      }
+    ],
+    "retrieval_query": "洗衣机扣费后没启动怎么办？"
+  },
+  {
+    "id": "E48",
+    "turns": [
+      {
+        "input": "食堂周末几点开门？",
+        "guide": "dining-hours",
+        "sections": [
+          "开放时间"
+        ],
+        "contains": [
+          "第一食堂 07:00 开门",
+          "第二食堂 07:30 开门",
+          "当日营业公告"
+        ]
+      }
+    ],
+    "retrieval_query": "食堂周末几点开门？"
+  },
+  {
+    "id": "E49",
+    "turns": [
+      {
+        "input": "食堂吃到异物怎么办？",
+        "guide": "dining-feedback",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "记录食堂窗口、用餐时间及订单"
+        ]
+      }
+    ],
+    "retrieval_query": "食堂吃到异物怎么办？"
+  },
+  {
+    "id": "E50",
+    "turns": [
+      {
+        "input": "饭卡充值不到账怎么办？",
+        "guide": "card-topup",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "核对卡账户和充值金额"
+        ]
+      }
+    ],
+    "retrieval_query": "饭卡充值不到账怎么办？"
+  },
+  {
+    "id": "E51",
+    "turns": [
+      {
+        "input": "校园卡重复扣费怎么办？",
+        "guide": "card-transaction",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "查询消费明细"
+        ]
+      }
+    ],
+    "retrieval_query": "校园卡重复扣费怎么办？"
+  },
+  {
+    "id": "E52",
+    "turns": [
+      {
+        "input": "学校快递要去哪取？",
+        "guide": "courier-pickup",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "到件通知指定的快递驿站或自提柜"
+        ]
+      }
+    ],
+    "retrieval_query": "学校快递要去哪取？"
+  },
+  {
+    "id": "E53",
+    "turns": [
+      {
+        "input": "交学费的入口在哪？",
+        "guide": "tuition-payment",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "学生缴费 / 应缴账单"
+        ]
+      }
+    ],
+    "retrieval_query": "交学费的入口在哪？"
+  },
+  {
+    "id": "E54",
+    "turns": [
+      {
+        "input": "重复缴费怎么申请退款？",
+        "guide": "tuition-refund",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "选择需退费的原订单"
+        ]
+      }
+    ],
+    "retrieval_query": "重复缴费怎么申请退款？"
+  },
+  {
+    "id": "E55",
+    "turns": [
+      {
+        "input": "困难生认定从哪个入口提交？",
+        "guide": "need-based-aid",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "困难认定 / 认定申请"
+        ]
+      }
+    ],
+    "retrieval_query": "困难生认定从哪个入口提交？"
+  },
+  {
+    "id": "E56",
+    "turns": [
+      {
+        "input": "国家助学金怎么申请？",
+        "guide": "student-grant",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "查看当期受理对象与所需材料"
+        ]
+      }
+    ],
+    "retrieval_query": "国家助学金怎么申请？"
+  },
+  {
+    "id": "E57",
+    "turns": [
+      {
+        "input": "生源地贷款回执要去哪个窗口？",
+        "guide": "student-loan",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "学生资助中心咨询窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "生源地贷款回执要去哪个窗口？"
+  },
+  {
+    "id": "E58",
+    "turns": [
+      {
+        "input": "校内兼职在哪儿申请？",
+        "guide": "work-study",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "勤工助学 / 岗位报名"
+        ]
+      }
+    ],
+    "retrieval_query": "校内兼职在哪儿申请？"
+  },
+  {
+    "id": "E59",
+    "turns": [
+      {
+        "input": "突发困难补助怎么申请？",
+        "guide": "temporary-aid",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "向学院资助窗口说明突发困难"
+        ]
+      }
+    ],
+    "retrieval_query": "突发困难补助怎么申请？"
+  },
+  {
+    "id": "E60",
+    "turns": [
+      {
+        "input": "图书逾期了去哪个窗口？",
+        "guide": "library-return",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "图书馆借阅柜台或公告标明的还书机"
+        ]
+      }
+    ],
+    "retrieval_query": "图书逾期了去哪个窗口？"
+  },
+  {
+    "id": "E61",
+    "turns": [
+      {
+        "input": "图书馆选座从哪个入口进去？",
+        "guide": "library-seat",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "空间服务 / 座位预约"
+        ]
+      }
+    ],
+    "retrieval_query": "图书馆选座从哪个入口进去？"
+  },
+  {
+    "id": "E62",
+    "turns": [
+      {
+        "input": "校外访问数据库的入口在哪里？",
+        "guide": "library-resources",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "电子资源 / 校外访问"
+        ]
+      }
+    ],
+    "retrieval_query": "校外访问数据库的入口在哪里？"
+  },
+  {
+    "id": "E63",
+    "turns": [
+      {
+        "input": "校园自助打印去哪找？",
+        "guide": "campus-printing",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "设备地图标注的自助打印点"
+        ]
+      }
+    ],
+    "retrieval_query": "校园自助打印去哪找？"
+  },
+  {
+    "id": "E64",
+    "turns": [
+      {
+        "input": "校园网连不上怎么办？",
+        "guide": "wifi-troubleshooting",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "查看网络维护公告"
+        ]
+      }
+    ],
+    "retrieval_query": "校园网连不上怎么办？"
+  },
+  {
+    "id": "E65",
+    "turns": [
+      {
+        "input": "学校邮箱的开通入口在哪？",
+        "guide": "campus-email",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "账号服务 / 校园邮箱"
+        ]
+      }
+    ],
+    "retrieval_query": "学校邮箱的开通入口在哪？"
+  },
+  {
+    "id": "E66",
+    "turns": [
+      {
+        "input": "统一身份认证登录不上怎么办？",
+        "guide": "unified-login",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "核对账号状态及登录报错"
+        ]
+      }
+    ],
+    "retrieval_query": "统一身份认证登录不上怎么办？"
+  },
+  {
+    "id": "E67",
+    "turns": [
+      {
+        "input": "校车几点发车？",
+        "guide": "campus-shuttle",
+        "sections": [
+          "开放时间"
+        ],
+        "contains": [
+          "当日班次公告"
+        ]
+      }
+    ],
+    "retrieval_query": "校车几点发车？"
+  },
+  {
+    "id": "E68",
+    "turns": [
+      {
+        "input": "开车进学校的申请入口在哪？",
+        "guide": "campus-parking",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "车辆通行 / 入校登记"
+        ]
+      }
+    ],
+    "retrieval_query": "开车进学校的申请入口在哪？"
+  },
+  {
+    "id": "E69",
+    "turns": [
+      {
+        "input": "电瓶车充电去哪？",
+        "guide": "bicycle-charging",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "设备地图标注的非机动车充电区"
+        ]
+      }
+    ],
+    "retrieval_query": "电瓶车充电去哪？"
+  },
+  {
+    "id": "E70",
+    "turns": [
+      {
+        "input": "校医院门诊去哪挂号？",
+        "guide": "clinic-visit",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "校医院门诊服务台"
+        ]
+      }
+    ],
+    "retrieval_query": "校医院门诊去哪挂号？"
+  },
+  {
+    "id": "E71",
+    "turns": [
+      {
+        "input": "大学生医保报销去哪办？",
+        "guide": "campus-insurance",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "学生医保服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "大学生医保报销去哪办？"
+  },
+  {
+    "id": "E72",
+    "turns": [
+      {
+        "input": "心理辅导在哪儿申请？",
+        "guide": "mental-health-booking",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "心理支持 / 咨询预约"
+        ]
+      }
+    ],
+    "retrieval_query": "心理辅导在哪儿申请？"
+  },
+  {
+    "id": "E73",
+    "turns": [
+      {
+        "input": "无障碍教室怎么申请？",
+        "guide": "accessibility-support",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "说明需要调整的课程、场地或考试安排"
+        ]
+      }
+    ],
+    "retrieval_query": "无障碍教室怎么申请？"
+  },
+  {
+    "id": "E74",
+    "turns": [
+      {
+        "input": "宿舍被盗怎么办？",
+        "guide": "campus-security",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "遇到正在发生的危险"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍被盗怎么办？"
+  },
+  {
+    "id": "E75",
+    "turns": [
+      {
+        "input": "学生申诉的申请入口在哪？",
+        "guide": "student-feedback",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "权益服务 / 意见与申诉"
+        ]
+      }
+    ],
+    "retrieval_query": "学生申诉的申请入口在哪？"
+  },
+  {
+    "id": "E76",
+    "turns": [
+      {
+        "input": "加入社团从哪个入口报名？",
+        "guide": "club-membership",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "社团服务 / 招新报名"
+        ]
+      }
+    ],
+    "retrieval_query": "加入社团从哪个入口报名？"
+  },
+  {
+    "id": "E77",
+    "turns": [
+      {
+        "input": "志愿时长在哪里查？",
+        "guide": "volunteering",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "实践服务 / 志愿活动"
+        ]
+      }
+    ],
+    "retrieval_query": "志愿时长在哪里查？"
+  },
+  {
+    "id": "E78",
+    "turns": [
+      {
+        "input": "学科竞赛的报名入口在哪？",
+        "guide": "competition-registration",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "竞赛服务 / 赛事报名"
+        ]
+      }
+    ],
+    "retrieval_query": "学科竞赛的报名入口在哪？"
+  },
+  {
+    "id": "E79",
+    "turns": [
+      {
+        "input": "开放实验室怎么申请？",
+        "guide": "lab-access",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "查看开放时段与准入要求"
+        ]
+      }
+    ],
+    "retrieval_query": "开放实验室怎么申请？"
+  },
+  {
+    "id": "E80",
+    "turns": [
+      {
+        "input": "自主实习备案的办理流程是什么？",
+        "guide": "internship-registration",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "填写实习单位、岗位和时间"
+        ]
+      }
+    ],
+    "retrieval_query": "自主实习备案的办理流程是什么？"
+  },
+  {
+    "id": "E81",
+    "turns": [
+      {
+        "input": "招聘会信息在哪里查？",
+        "guide": "career-fair",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "招聘活动 / 宣讲与双选"
+        ]
+      }
+    ],
+    "retrieval_query": "招聘会信息在哪里查？"
+  },
+  {
+    "id": "E82",
+    "turns": [
+      {
+        "input": "三方协议怎么申请？",
+        "guide": "employment-agreement",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "核对签约单位信息"
+        ]
+      }
+    ],
+    "retrieval_query": "三方协议怎么申请？"
+  },
+  {
+    "id": "E83",
+    "turns": [
+      {
+        "input": "交换生从哪个入口报名？",
+        "guide": "exchange-program",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "交流项目 / 交换生报名"
+        ]
+      }
+    ],
+    "retrieval_query": "交换生从哪个入口报名？"
+  },
+  {
+    "id": "E84",
+    "turns": [
+      {
+        "input": "留学生报到要去哪个窗口？",
+        "guide": "international-student-support",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "国际学生服务窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "留学生报到要去哪个窗口？"
+  },
+  {
+    "id": "E85",
+    "turns": [
+      {
+        "input": "空闲教室在哪里查？",
+        "guide": "study-room-booking",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "教学空间 / 空闲教室"
+        ]
+      }
+    ],
+    "retrieval_query": "空闲教室在哪里查？"
+  },
+  {
+    "id": "E86",
+    "turns": [
+      {
+        "input": "校园地图的入口在哪？",
+        "guide": "campus-map",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "校园导航 / 校区地图"
+        ]
+      }
+    ],
+    "retrieval_query": "校园地图的入口在哪？"
+  },
+  {
+    "id": "E87",
+    "turns": [
+      {
+        "input": "退学手续去哪办？",
+        "guide": "class-withdrawal",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "学院学籍窗口"
+        ]
+      }
+    ],
+    "retrieval_query": "退学手续去哪办？"
+  },
+  {
+    "id": "E88",
+    "turns": [
+      {
+        "input": "新生办学生证的办理流程是什么？",
+        "guide": "student-id-initial",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "核对姓名和院系"
+        ]
+      }
+    ],
+    "retrieval_query": "新生办学生证的办理流程是什么？"
+  },
+  {
+    "id": "E89",
+    "turns": [
+      {
+        "input": "学校校历在哪里查？",
+        "guide": "academic-calendar",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "教学信息 / 学年校历"
+        ]
+      }
+    ],
+    "retrieval_query": "学校校历在哪里查？"
+  },
+  {
+    "id": "E90",
+    "turns": [
+      {
+        "input": "图书馆周末几点开门？",
+        "guide": "library-hours",
+        "sections": [
+          "开放时间"
+        ],
+        "contains": [
+          "开馆公告"
+        ]
+      }
+    ],
+    "retrieval_query": "图书馆周末几点开门？"
+  },
+  {
+    "id": "E91",
+    "turns": [
+      {
+        "input": "校园卡挂失的入口在哪？",
+        "guide": "lost-card-freeze",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "校园卡服务 / 挂失解挂"
+        ]
+      }
+    ],
+    "retrieval_query": "校园卡挂失的入口在哪？"
+  },
+  {
+    "id": "E92",
+    "turns": [
+      {
+        "input": "新生校园卡的领取地点在哪？",
+        "guide": "campus-card-initial",
+        "sections": [
+          "领取地点"
+        ],
+        "contains": [
+          "领卡点"
+        ]
+      }
+    ],
+    "retrieval_query": "新生校园卡的领取地点在哪？"
+  },
+  {
+    "id": "E93",
+    "turns": [
+      {
+        "input": "宿舍晚归从哪个入口登记？",
+        "guide": "dorm-overnight",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "住宿管理 / 晚归与外宿"
+        ]
+      }
+    ],
+    "retrieval_query": "宿舍晚归从哪个入口登记？"
+  },
+  {
+    "id": "E94",
+    "turns": [
+      {
+        "input": "学校寄快递要去哪？",
+        "guide": "campus-delivery",
+        "sections": [
+          "办理地点"
+        ],
+        "contains": [
+          "寄件页面标明的快递网点"
+        ]
+      }
+    ],
+    "retrieval_query": "学校寄快递要去哪？"
+  },
+  {
+    "id": "E95",
+    "turns": [
+      {
+        "input": "学校银行卡丢了怎么办？",
+        "guide": "campus-lost-bank-card",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "通过发卡银行官方渠道处理卡片挂失和换领"
+        ]
+      }
+    ],
+    "retrieval_query": "学校银行卡丢了怎么办？"
+  },
+  {
+    "id": "E96",
+    "turns": [
+      {
+        "input": "期末评教的入口在哪？",
+        "guide": "teaching-feedback",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "教学评价 / 学生评教"
+        ]
+      }
+    ],
+    "retrieval_query": "期末评教的入口在哪？"
+  },
+  {
+    "id": "E97",
+    "turns": [
+      {
+        "input": "新生体检在哪里查？",
+        "guide": "student-health-checkin",
+        "sections": [
+          "申请入口"
+        ],
+        "contains": [
+          "学生健康 / 新生体检安排"
+        ]
+      }
+    ],
+    "retrieval_query": "新生体检在哪里查？"
+  },
+  {
+    "id": "F06",
+    "turns": [
+      {
+        "input": "我想缓考，怎么办？",
+        "guide": "exam-deferral",
+        "sections": [
+          "办理流程"
+        ],
+        "contains": [
+          "缓考申请"
+        ]
+      },
+      {
+        "input": "我已有缓考申请单，还差什么？",
+        "guide": "exam-deferral",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：缓考申请表",
+          "缺少：缓考原因证明"
+        ],
+        "material": {
+          "provided_items": [
+            "缓考申请单"
+          ],
+          "conditions": {},
+          "missing": [
+            "缓考原因证明"
+          ],
+          "pending": []
+        }
+      },
+      {
+        "input": "改问学费退款，我已有订单编号，还缺什么？",
+        "guide": "tuition-refund",
+        "sections": [
+          "所需材料"
+        ],
+        "contains": [
+          "已齐：原缴费订单编号",
+          "缺少：退费说明"
+        ],
+        "material": {
+          "provided_items": [
+            "订单编号"
+          ],
+          "conditions": {},
+          "missing": [
+            "退费说明"
+          ],
+          "pending": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "F07",
+    "turns": [
+      {
+        "input": "学生证补办和新生办学生证是在哪儿申请？",
+        "sections": [],
+        "contains": [
+          "学生证补办",
+          "新生学生证办理",
+          "请确认"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "F08",
+    "turns": [
+      {
+        "input": "学费缴纳",
+        "guide": "tuition-payment",
+        "sections": ["办理流程"],
+        "contains": ["学生缴费 / 应缴账单", "待缴费", "缴费记录"]
+      },
+      {
+        "input": "缴纳第一学期的学费",
+        "guide": "tuition-payment",
+        "sections": ["办理流程"],
+        "contains": ["第一学期", "已缴费", "订单编号"]
+      },
+      {
+        "input": "第一学期学费要交多少？",
+        "guide": "tuition-payment",
+        "sections": ["办理费用"],
+        "contains": ["无法读取个人账单", "应缴金额"]
+      }
+    ]
+  }
+]

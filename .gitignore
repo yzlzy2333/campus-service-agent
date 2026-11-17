@@ -1,0 +1,15 @@
+.runtime/
+runtime/
+.venv/
+.build/
+__pycache__/
+.env
+/deepseek.local.json
+/.deepseek-key-*
+*.py[cod]
+
+.env.*
+*.jsonl
+/evaluation/*.json
+!/evaluation/cases.json
+!/evaluation/freeze.json

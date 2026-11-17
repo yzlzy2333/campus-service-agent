@@ -1,0 +1,2 @@
+/guides/*.md -text
+/evaluation/cases.json -text
