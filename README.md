@@ -4,28 +4,28 @@ A command-line assistant for finding campus procedures and checking which applic
 
 The interface and knowledge base support Mandarin. The application can run offline, or use a DeepSeek model through LangChain for tool-driven responses. Both modes share the same guides and material rules.
 
-## Getting started
+## Getting started on macOS
 
-Use Python 3.12 from the project directory. On Windows PowerShell:
+Install Git and Python 3.12. If you already use Homebrew:
 
-~~~powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m campus --offline
-~~~
+```sh
+brew install git python@3.12
+```
 
-On macOS or Linux:
+You can also use a Python 3.12 installation from [Python.org](https://www.python.org/downloads/macos/). On Apple Silicon, use a native ARM64 terminal and interpreter to keep the installed packages consistent with your architecture.
 
-~~~sh
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m campus --offline
-~~~
+```sh
+git clone --branch deploy/macos --single-branch https://github.com/yzlzy2333/campus-service-agent.git
+cd campus-service-agent
+./deploy.sh setup
+./deploy.sh run --offline
+```
+
+To verify the guide index, run `./deploy.sh run --rebuild-index`. Run `./deploy.sh setup` again after updating dependencies. The setup script installs the pinned requirements into `.venv`.
 
 Type /list to browse services, /new to reset the conversation, or /exit to quit. In a single conversation, try asking in Mandarin about replacing a lost student ID, then say which documents you already have and ask what is still missing. Switch to a campus card question to see how the assistant changes context.
 
-For model-backed responses, set DEEPSEEK_API_KEY in your environment and run python -m campus. DEEPSEEK_MODEL can override the default. Online requests require network access and may consume API credits.
+For model-backed responses, set `DEEPSEEK_API_KEY` in your environment and run `./deploy.sh run`. DEEPSEEK_MODEL can override the default. Online requests require network access and may consume API credits.
 
 ## How it works
 
