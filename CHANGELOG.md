@@ -4,22 +4,22 @@
 
 ### Fixed
 
-- Preserve material-check results while answering additional requests for a location, application entry, opening hours, fees, or processing time in both offline and live modes.
+- Preserve checked materials while answering additional requests for locations, application entries, opening hours, fees, and processing times.
 - Retrieve missing sections from the full guide and explicitly report unavailable information.
-- Require inline references for every model-generated sentence and reject unused, unknown, or incomplete reference sets.
-- Check requested-section coverage and selected fee, duration, time, and URL literals against the evidence cited by each sentence.
+- Require inline evidence for each model-generated sentence, check requested-section coverage, and reject unsupported fee, duration, time, and URL literals.
+- Recover from invalid model citations with guide text and retain the validation failure in the diagnostic log.
+- Record initial topic searches and check the full guide before reporting missing fee or timing information.
 
 ### Added
 
-- Seven focused regression tests for mixed requests and citation validation.
-- Shared deployment and regression CI for Windows, Ubuntu, Intel macOS, and Apple Silicon macOS.
-- Full frozen regression checks and dependency consistency checks in CI.
-- Deployment branch maintenance instructions.
+- Eight reliability regression tests, including recovery through the live entry point.
+- Shared CI for Windows, Ubuntu, Intel macOS, and Apple Silicon macOS, including the frozen regression suite.
+- Atomic live-evaluation checkpoints, per-scenario progress, and configurable repetition counts.
+- Deployment branch maintenance instructions and a validation record with actual live diagnostic measurements.
+- Versioned source deployment archives for Windows, Linux, and macOS.
 
 ### Validation
 
-- Local guide audit passed 962/962 checks across 90 services.
-- Frozen offline regressions passed 342/342 RAG runs and 294/294 full-guide runs.
-- Simulated HTTP checks passed 12/12, retrieval hit 96/96 expected passages, and all seven reliability tests passed.
-- Live sampling and native CI validation are being recorded separately as they complete.
-- Literal checks and citation structure validation do not establish semantic entailment. Human review is required for semantic accuracy.
+- Local checks passed 962/962 guide checks, 342/342 RAG runs, 294/294 full-guide runs, 12/12 simulated HTTP runs, 96/96 expected retrieval passages, and 8/8 reliability tests.
+- A 30-run, 57-turn DeepSeek diagnostic sample exposed evidence-validation failures in an intermediate implementation. Final corrections passed local regression.
+- Final-version full live acceptance and semantic grading remain pending. See [VALIDATION.md](VALIDATION.md) for sample measurements and scope.
