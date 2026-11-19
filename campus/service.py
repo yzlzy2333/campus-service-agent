@@ -199,7 +199,11 @@ class Offline:
                     prefix = re.split(r"[，。；！？,;!?]|但是|不过|但", submitted[:mention.start()])[-1]
                     signals = re.findall(r"没有带|没有准备|没有|没带|没准备|尚未准备|未准备|缺少|还缺|已有|带了|准备了|有", prefix)
                     negative_prefix = bool(signals) and signals[-1] not in {"已有", "带了", "准备了", "有"}
-                    negative_suffix = re.match(r"\s*(?:还)?(?:没有(?:带|准备)?|没带|没准备|未带|未准备|缺少)", submitted[mention.end():])
+                    negative_suffix = re.match(
+                        r"\s*(?:都|也|还)?(?:没有(?:带|准备)?|没带|没准备|未带|未准备|缺少)"
+                        r"(?=$|[，。；！？,;!?、]|但是|不过|但|而|和|也)",
+                        submitted[mention.end():],
+                    )
                     if not negative_prefix and not negative_suffix:
                         provided.append(mention.group())
             result = call("check_materials", guide_id=gid,
