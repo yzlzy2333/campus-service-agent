@@ -189,12 +189,19 @@ class Offline:
             provided = []
             submitted = re.split(r"还差|还缺|够吗|齐了吗|需要", text, maxsplit=1)[0]
             if re.search(r"已有|我有|我带|只带|准备了|带了|还差|还缺", text):
-                # Prefer the longest matching alias and exclude explicit negations.
+                # Match the longest alias once, then use the final mention and its local context.
                 for material in meta.materials:
-                    for alias in sorted([material.name, *material.aliases], key=len, reverse=True):
-                        if alias in submitted and not re.search(rf"(?:没有|没带|没准备|缺少)\s*{re.escape(alias)}", submitted):
-                            provided.append(alias)
-                            break
+                    aliases = sorted({material.name, *material.aliases}, key=len, reverse=True)
+                    mentions = list(re.finditer("|".join(re.escape(alias) for alias in aliases), submitted))
+                    if not mentions:
+                        continue
+                    mention = mentions[-1]
+                    prefix = re.split(r"[，。；！？,;!?]|但是|不过|但", submitted[:mention.start()])[-1]
+                    signals = re.findall(r"没有带|没有准备|没有|没带|没准备|尚未准备|未准备|缺少|还缺|已有|带了|准备了|有", prefix)
+                    negative_prefix = bool(signals) and signals[-1] not in {"已有", "带了", "准备了", "有"}
+                    negative_suffix = re.match(r"\s*(?:还)?(?:没有(?:带|准备)?|没带|没准备|未带|未准备|缺少)", submitted[mention.end():])
+                    if not negative_prefix and not negative_suffix:
+                        provided.append(mention.group())
             result = call("check_materials", guide_id=gid,
                           provided_items=provided, conditions=session.conditions.copy())
             return material_with_details(self.knowledge, turn, result, self.mode)
