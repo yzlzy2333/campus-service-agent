@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased - 2026-11-20
+
+### Fixed
+
+- Prevent material checks from treating explicitly absent documents as provided, including negation before or after a material name and later corrections in the same message.
+- Compare complete numeric facts against cited evidence so a source fee of 120 does not validate a claimed fee of 20, and a duration of 21 days does not validate 1 day.
+- Create missing parent directories for CLI session logs and report inaccessible log paths as argument errors before starting a conversation.
+
+### Validation
+
+- All 11 reliability tests passed, including three new regressions for negated materials, partial numeric matches, and nested log paths through the CLI.
+- The frozen guide and case data are unchanged. Full offline and simulated HTTP regression results are recorded in VALIDATION.md.
+
 ## 0.2.0 - 2026-11-19
 
 ### Fixed

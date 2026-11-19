@@ -294,8 +294,10 @@ class Live:
                     sources = "\n".join(turn.evidence[ref]["text"]
                                         for ref in re.findall(marker_pattern, sentence))
                     claim = re.sub(marker_pattern, "", sentence)
-                    facts = re.findall(r"\d+(?:\.\d+)?\s*(?:元|天|小时|分钟)|\d{1,2}:\d{2}|https?://[^\s，。；）)]+", claim)
-                    if any(re.sub(r"\s", "", fact) not in re.sub(r"\s", "", sources) for fact in facts):
+                    fact_pattern = r"\d+(?:\.\d+)?\s*(?:元|天|小时|分钟)|\d{1,2}:\d{2}|https?://[^\s，。；）)]+"
+                    facts = {re.sub(r"\s", "", fact) for fact in re.findall(fact_pattern, claim)}
+                    source_facts = {re.sub(r"\s", "", fact) for fact in re.findall(fact_pattern, sources)}
+                    if not facts <= source_facts:
                         raise ValueError
                 wanted = requested_sections(turn.text) | requested_details(turn.text)
                 available = {row["section"] for row in turn.evidence.values()}
