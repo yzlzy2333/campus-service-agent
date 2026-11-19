@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 
 from .knowledge import Knowledge, failure, requested_details, requested_sections
 from .service import (
-    EMAIL, STUDENT_NUMBER, STATUS_TEXT, Session, Turn, cite, condition_from,
+    EMAIL, STUDENT_NUMBER, STATUS_TEXT, Offline, Session, Turn, cite, condition_from,
     invoke_tool, material_answer, material_with_details, redact, topic_query,
 )
 
@@ -191,7 +191,7 @@ class Live:
 
     def ask(self, text: str, session: Session) -> Turn:
         turn = Turn(redact(text), self.mode, self.environment, session.thread_id)
-        found = self.knowledge.search(topic_query(turn.text))["candidates"]
+        found = invoke_tool(self.knowledge, turn, "search_guides", query=topic_query(turn.text))["candidates"]
         explicit = [row["guide_id"] for row in found]
         gid = explicit[0] if len(explicit) == 1 else (session.guide_id if not explicit else None)
         conditions = session.conditions.copy() if gid == session.guide_id and gid else {}
@@ -211,6 +211,17 @@ class Live:
                 config,
             )
             turn.answer = self._validated_answer(turn, result["messages"][-1].content)
+            if turn.error == "EvidenceValidationError" and topic["guide_id"] and not topic["ambiguous"]:
+                # Recover using verbatim guide sections, preserving the validation failure in the log.
+                recovery = Offline(self.knowledge, self.mode).ask(
+                    turn.text, Session(guide_id=topic["guide_id"], conditions=topic["conditions"].copy())
+                )
+                if recovery.citations and recovery.error is None:
+                    turn.answer, turn.citations = recovery.answer, recovery.citations
+                    turn.calls.extend(recovery.calls)
+                    turn.evidence.update(recovery.evidence)
+                    turn.fallbacks.extend(["EvidenceValidationError: recovered from guide text", *recovery.fallbacks])
+                    turn.error = None
             session.guide_id, session.conditions = topic["guide_id"], topic["conditions"]
             session.candidates = topic["ambiguous"]
             self.committed[session.thread_id] = self.agent.update_state(
@@ -247,6 +258,11 @@ class Live:
                  if row["tool"] == "read_guide" and row["result"]["status"] == "ok"),
                 None,
             )
+            if complete_guide is None and turn.evidence:
+                guide_ids = {row["guide_id"] for row in turn.evidence.values()}
+                if len(guide_ids) == 1 and not details <= {row["section"] for row in turn.evidence.values()}:
+                    complete_guide = invoke_tool(self.knowledge, turn, "read_guide", guide_id=guide_ids.pop())
+                    turn.fallbacks.append("Full guide checked for missing requested details")
             if complete_guide and details.isdisjoint(row["section"] for row in complete_guide["evidence"]):
                 return "现有模拟指南未提供" + "、".join(sorted(details)) + "，无法核实。"
         try:
