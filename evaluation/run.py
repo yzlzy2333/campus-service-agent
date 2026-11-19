@@ -5,6 +5,7 @@ import hashlib
 import importlib.metadata
 import json
 import math
+import re
 import shutil
 import statistics
 import sys
@@ -93,7 +94,11 @@ class Fixture:
             result = json.loads(last["content"])
             rows = result["evidence"]
             message["content"] = json.dumps({
-                "status": "answer", "answer": rows[0]["text"], "refs": [rows[0]["ref"]]
+                "status": "answer", "answer": "\n".join(
+                    sentence + f' [[{rows[0]["ref"]}]]'
+                    for sentence in re.split(r"(?<=[。！？!?])|\n", rows[0]["text"])
+                    if sentence.strip()
+                ), "refs": [rows[0]["ref"]]
             }, ensure_ascii=False)
         else:
             material = "还差什么" in last["content"]

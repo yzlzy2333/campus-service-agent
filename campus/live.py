@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 from .knowledge import Knowledge, failure, requested_details, requested_sections
 from .service import (
     EMAIL, STUDENT_NUMBER, STATUS_TEXT, Session, Turn, cite, condition_from,
-    invoke_tool, material_answer, redact, topic_query,
+    invoke_tool, material_answer, material_with_details, redact, topic_query,
 )
 
 MODEL = "deepseek-flash"
@@ -236,8 +236,8 @@ class Live:
     def _validated_answer(self, turn: Turn, content) -> str:
         asks_for_guide = bool(requested_sections(turn.text))
         for row in reversed(turn.calls):
-            if row["tool"] == "check_materials" and not asks_for_guide:
-                return material_answer(turn, row["result"])
+            if row["tool"] == "check_materials":
+                return material_with_details(self.knowledge, turn, row["result"], self.mode)
             if row["result"]["status"] in ("unavailable", "rule_error"):
                 return STATUS_TEXT[row["result"]["status"]]
         details = requested_details(turn.text)
@@ -264,6 +264,28 @@ class Live:
             if any(marker not in numbers for marker in markers):
                 raise ValueError
             if status == "answer" and refs:
+                # Every used reference must appear inline, and every sentence needs evidence.
+                if set(markers) != set(refs):
+                    raise ValueError
+                checked_answer = re.sub(
+                    r"([。！？!?])(\s*(?:\[\[[^\[\]]+\]\]\s*)+)", r"\2\1", answer
+                )
+                for sentence in re.split(r"(?<=[。！？!?])|\n", checked_answer):
+                    if not sentence.strip():
+                        continue
+                    if not re.search(marker_pattern, sentence):
+                        raise ValueError
+                    sources = "\n".join(turn.evidence[ref]["text"]
+                                        for ref in re.findall(marker_pattern, sentence))
+                    claim = re.sub(marker_pattern, "", sentence)
+                    facts = re.findall(r"\d+(?:\.\d+)?\s*(?:元|天|小时|分钟)|\d{1,2}:\d{2}|https?://[^\s，。；）)]+", claim)
+                    if any(re.sub(r"\s", "", fact) not in re.sub(r"\s", "", sources) for fact in facts):
+                        raise ValueError
+                wanted = requested_sections(turn.text) | requested_details(turn.text)
+                available = {row["section"] for row in turn.evidence.values()}
+                cited = {turn.evidence[ref]["section"] for ref in refs}
+                if not wanted.intersection(available) <= cited:
+                    raise ValueError
                 answer = re.sub(marker_pattern, lambda match: f"[{numbers[match.group(1)]}]", answer)
                 return redact(answer) + cite(turn, refs)
             if status in ("clarify", "insufficient") and not refs:
