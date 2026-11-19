@@ -89,13 +89,13 @@ def cite(turn: Turn, refs: list[str]) -> str:
     return "\n来源（模拟资料）\n" + "\n".join(f"- {line}" for line in lines) if lines else ""
 
 
-def material_answer(turn: Turn, result: dict) -> str:
+def material_answer(turn: Turn, result: dict, *, include_citations=True) -> str:
     if result["status"] != "ok":
         return STATUS_TEXT[result["status"]]
     evidence = result["evidence"]
     refs = [row["ref"] for row in evidence]
     if not any(result[bucket] for bucket in ("complete", "missing", "pending")):
-        return "模拟指南没有列出需提交的材料。请在办理入口核对当期要求。" + cite(turn, refs)
+        return "模拟指南没有列出需提交的材料。请在办理入口核对当期要求。" + (cite(turn, refs) if include_citations else "")
     pending = []
     for row in result["pending"]:
         rule = "、".join(f"{key}为{value}" for key, value in row["when"].items())
@@ -107,7 +107,34 @@ def material_answer(turn: Turn, result: dict) -> str:
     ]
     if pending:
         lines.append("请确认补办原因是遗失还是损坏。")
-    return "\n".join(lines) + cite(turn, refs)
+    return "\n".join(lines) + (cite(turn, refs) if include_citations else "")
+
+
+def material_with_details(knowledge: Knowledge, turn: Turn, result: dict, mode: str) -> str:
+    """Render checked materials and every additional requested guide section."""
+    desired = requested_sections(turn.text) | requested_details(turn.text)
+    if result["status"] != "ok" or not desired:
+        return material_answer(turn, result)
+    guide_id = result["evidence"][0]["guide_id"]
+    refs = [row["ref"] for row in result["evidence"]]
+    parts = [material_answer(turn, result, include_citations=False)]
+    if mode == "rag":
+        details = invoke_tool(knowledge, turn, "retrieve_guide_passages", query=turn.text, guide_id=guide_id)
+        if not desired <= {row["section"] for row in details["evidence"]}:
+            turn.fallbacks.append("Additional requested sections require the full guide")
+            details = invoke_tool(knowledge, turn, "read_guide", guide_id=guide_id)
+    else:
+        details = invoke_tool(knowledge, turn, "read_guide", guide_id=guide_id)
+    if details["status"] != "ok":
+        parts.append(STATUS_TEXT[details["status"]])
+    else:
+        selected = [row for row in details["evidence"] if row["section"] in desired]
+        parts.extend(f'{row["section"]}\n{row["text"]}' for row in selected)
+        refs.extend(row["ref"] for row in selected)
+        missing = desired - {row["section"] for row in selected}
+        if missing:
+            parts.append("现有模拟指南未提供" + "、".join(sorted(missing)) + "，无法核实。")
+    return "\n\n".join(parts) + cite(turn, refs)
 
 
 def condition_from(text: str):
@@ -168,8 +195,9 @@ class Offline:
                         if alias in submitted and not re.search(rf"(?:没有|没带|没准备|缺少)\s*{re.escape(alias)}", submitted):
                             provided.append(alias)
                             break
-            return material_answer(turn, call("check_materials", guide_id=gid,
-                                              provided_items=provided, conditions=session.conditions.copy()))
+            result = call("check_materials", guide_id=gid,
+                          provided_items=provided, conditions=session.conditions.copy())
+            return material_with_details(self.knowledge, turn, result, self.mode)
 
         desired = requested_sections(text) | requested_details(text)
         if found and not desired:
