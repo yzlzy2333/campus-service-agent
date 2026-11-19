@@ -46,11 +46,13 @@ class ReliabilityTests(unittest.TestCase):
                 self.assertEqual({row["section"] for row in turn.citations},
                                  {"\u6240\u9700\u6750\u6599", "\u529e\u7406\u5730\u70b9"})
 
-    def response(self, answer, refs):
+    def response(self, answer, refs, *, source=None):
         turn = Turn("\u5b66\u751f\u8bc1\u8865\u529e", "full", "fixture_http", "test")
         row = {"ref": "test-ref", "guide_name": "Fixture", "guide_id": "student-id",
                "section": "\u529e\u7406\u8d39\u7528", "version": "1.0.0",
                "text": "\u8d39\u7528\u4e3a20\u5143\u3002\u5f00\u653e\u65f6\u95f4\u4e3a08:30\u3002"}
+        if source is not None:
+            row["text"] = source
         turn.evidence[row["ref"]] = row
         live = object.__new__(Live)
         live._validated_answer(turn, json.dumps({"status": "answer", "answer": answer, "refs": refs}))
@@ -100,6 +102,53 @@ class ReliabilityTests(unittest.TestCase):
         finally:
             live.client.close()
 
+
+
+    def test_material_negation_and_last_mention(self):
+        cases = [
+            ("\u5b66\u751f\u8bc1\u4e22\u4e86\uff0c\u6211\u6709\u8bc1\u4ef6\u7167\uff0c\u6ca1\u6709\u5e26\u7533\u8bf7\u8868\uff0c\u8fd8\u5dee\u4ec0\u4e48\uff1f", ["\u8bc1\u4ef6\u7167"], ["\u7533\u8bf7\u8868"]),
+            ("\u5b66\u751f\u8bc1\u4e22\u4e86\uff0c\u6211\u6709\u7533\u8bf7\u8868\uff0c\u8bc1\u4ef6\u7167\u6ca1\u5e26\uff0c\u8fd8\u5dee\u4ec0\u4e48\uff1f", ["\u7533\u8bf7\u8868"], ["\u8bc1\u4ef6\u7167"]),
+            ("\u5b66\u751f\u8bc1\u4e22\u4e86\uff0c\u6211\u6ca1\u6709\u7533\u8bf7\u8868\u548c\u8bc1\u4ef6\u7167\uff0c\u8fd8\u5dee\u4ec0\u4e48\uff1f", [], ["\u7533\u8bf7\u8868", "\u8bc1\u4ef6\u7167"]),
+            ("\u5b66\u751f\u8bc1\u4e22\u4e86\uff0c\u6211\u6ca1\u6709\u7533\u8bf7\u8868\uff0c\u4f46\u73b0\u5728\u6709\u7533\u8bf7\u8868\u548c\u8bc1\u4ef6\u7167\uff0c\u8fd8\u5dee\u4ec0\u4e48\uff1f",
+             ["\u7533\u8bf7\u8868", "\u8bc1\u4ef6\u7167"], []),
+        ]
+        for mode in ("rag", "full"):
+            for query, complete, missing in cases:
+                with self.subTest(mode=mode, query=query):
+                    turn = Offline(self.kb, mode).ask(query, Session())
+                    result = next(row["result"] for row in turn.calls if row["tool"] == "check_materials")
+                    self.assertEqual(result["complete"], complete)
+                    self.assertTrue(set(missing) <= set(result["missing"]))
+
+    def test_rejects_partial_numeric_matches(self):
+        cases = [
+            ("\u8d39\u7528\u4e3a120\u5143\u3002", "\u8d39\u7528\u4e3a20\u5143[[test-ref]]\u3002"),
+            ("\u8d39\u7528\u4e3a20\u5143\u3002", "\u8d39\u7528\u4e3a0\u5143[[test-ref]]\u3002"),
+            ("\u9700\u898121\u5929\u3002", "\u9700\u89811\u5929[[test-ref]]\u3002"),
+            ("\u5f00\u653e\u65f6\u95f418:30\u3002", "\u5f00\u653e\u65f6\u95f48:30[[test-ref]]\u3002"),
+        ]
+        for source, answer in cases:
+            with self.subTest(source=source):
+                turn = self.response(answer, ["test-ref"], source=source)
+                self.assertEqual(turn.error, "EvidenceValidationError")
+
+    def test_nested_log_path_through_cli(self):
+        import subprocess
+        import sys
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "nested" / "logs" / "session.jsonl"
+            process = subprocess.run(
+                [sys.executable, "-X", "utf8", "-m", "campus", "--offline", "--log", str(path)],
+                input="\u5b66\u751f\u8bc1\u4e22\u4e86\u600e\u4e48\u529e\uff1f\n/exit\n",
+                text=True, encoding="utf-8", capture_output=True,
+                cwd=Path(__file__).resolve().parents[1], timeout=30,
+            )
+            self.assertEqual(process.returncode, 0, process.stderr)
+            rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(rows), 1)
+            self.assertTrue(rows[0]["answer"])
 
 if __name__ == "__main__":
     unittest.main()

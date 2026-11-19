@@ -23,6 +23,13 @@ def main():
     parser.add_argument("--list-guides", action="store_true", help="列出当前支持的模拟办事事项")
     parser.add_argument("--log", type=Path, help="将每轮脱敏记录追加到 JSONL 文件")
     args = parser.parse_args()
+    if args.log:
+        try:
+            args.log.parent.mkdir(parents=True, exist_ok=True)
+            with args.log.open("a", encoding="utf-8"):
+                pass
+        except OSError as exc:
+            parser.error(f"Cannot open session log: {exc}")
     kb = Knowledge()
     if args.list_guides:
         print_guides(kb)

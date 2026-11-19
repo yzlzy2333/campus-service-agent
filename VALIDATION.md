@@ -1,5 +1,15 @@
 # Validation record
 
+## Bug audit - 2026-11-20
+
+The audit reproduced incorrect material completion for explicit negation and incorrect numeric citation validation through substring matching. It also identified that a nested session log path failed when its parent directory did not exist.
+
+Regression coverage now includes negative material statements before and after the material name, negation shared across multiple materials, later corrections within a message, complete numeric fact matching, and a CLI subprocess writing its first conversation record to a new nested log directory.
+
+All 11 reliability tests passed. The frozen suite passed 342/342 RAG runs, 294/294 full-guide runs, 12/12 simulated HTTP runs, and 96/96 expected retrieval passages. Guide coverage passed 962/962 checks. This audit used offline and simulated HTTP checks.
+
+## Version 0.2.0 validation
+
 Date: 2026-11-19
 
 ## Final local regression
