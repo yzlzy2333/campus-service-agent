@@ -1,6 +1,7 @@
 """Regression checks for mixed requests and evidence validation."""
 import json
 import unittest
+import httpx
 
 from campus.knowledge import Knowledge, requested_sections
 from campus.live import Live
@@ -73,6 +74,31 @@ class ReliabilityTests(unittest.TestCase):
     def test_rejects_unsupported_fee_and_time(self):
         for answer in ("\u8d39\u7528\u4e3a99\u5143[[test-ref]]\u3002", "\u5f00\u653e\u65f6\u95f4\u4e3a09:30[[test-ref]]\u3002"):
             self.assertEqual(self.response(answer, ["test-ref"]).error, "EvidenceValidationError")
+
+    def test_live_recovers_from_uncited_model_answer(self):
+        from evaluation.run import Fixture
+        fixture = Fixture()
+
+        def without_citations(request):
+            response = fixture(request)
+            data = response.json()
+            message = data["choices"][0]["message"]
+            if message.get("content") and not message.get("tool_calls"):
+                content = json.loads(message["content"])
+                content["answer"] = "Uncited response"
+                message["content"] = json.dumps(content)
+            return httpx.Response(200, json=data)
+
+        live = Live(self.kb, "full", api_key="fixture-only",
+                    transport=httpx.MockTransport(without_citations), summarize=False)
+        try:
+            turn = live.ask("\u5b66\u751f\u8bc1\u4e22\u4e86\uff0c\u600e\u4e48\u529e\uff1f", Session())
+            self.assertIsNone(turn.error)
+            self.assertTrue(turn.citations)
+            self.assertTrue(any("EvidenceValidationError" in entry for entry in turn.fallbacks))
+            self.assertNotIn("Uncited response", turn.answer)
+        finally:
+            live.client.close()
 
 
 if __name__ == "__main__":

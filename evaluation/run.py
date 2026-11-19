@@ -249,7 +249,10 @@ def main():
     parser.add_argument("--live", action="store_true", help="发送真实请求并记录待人工审查的原始结果")
     parser.add_argument("--case", action="append", help="只运行指定用例，可重复")
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--repeat", type=int, default=3, help="Number of repetitions per case (default: 3)")
     args = parser.parse_args()
+    if args.repeat < 1:
+        parser.error("--repeat must be at least 1")
     digest = fingerprint()
     if digest != json.loads(FROZEN.read_text(encoding="utf-8")):
         parser.error("指南或评测脚本与冻结哈希不符")
@@ -259,6 +262,15 @@ def main():
         parser.error("存在未知用例 ID")
     versions = {name: importlib.metadata.version(name) for name in
                 ("langchain", "langgraph", "langchain-deepseek", "pydantic", "rank-bm25", "PyYAML", "httpx", "openai")}
+
+    def save_results():
+        result = {"versions": {"python": sys.version.split()[0], **versions}, "fingerprint": digest,
+                  "summary": summary(runs, retrieval), "retrieval": retrieval, "runs": runs}
+        args.out.parent.mkdir(exist_ok=True, parents=True)
+        temporary = args.out.with_suffix(args.out.suffix + ".tmp")
+        temporary.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        temporary.replace(args.out)
+
     with tempfile.TemporaryDirectory(dir=HERE) as temp:
         directory = Path(temp) / "guides"
         shutil.copytree(GUIDES, directory)
@@ -278,20 +290,23 @@ def main():
                     continue
                 if mode == "full" and cid != "C2" and not cid.startswith("E"):
                     continue
-                for rep in range(1, 4):
+                for rep in range(1, args.repeat + 1):
                     observed = local_case(case, mode, engine, kb)
                     if args.live:
                         observed["automated_precheck_passed"] = observed.pop("passed")
                         observed["passed"] = None
                     runs.append({"case": cid, "mode": mode, "repeat": rep,
                                  "environment": "deepseek_api" if args.live else "offline", **observed})
+                    if args.live:
+                        save_results()
+                        print(f"Completed {cid}/{mode}/{rep}", flush=True)
             if args.live:
                 engine.client.close()
         if args.live and "D2" in selected:
             script = next(case for case in CASES if case["id"] == "D2")
             for enabled in (True, False):
                 engine = Live(kb, "rag", summarize=enabled)
-                for repeat in range(1, 4):
+                for repeat in range(1, args.repeat + 1):
                     session = Session()
                     turns = [engine.ask(step["input"], session).record() for step in script["turns"]]
                     runs.append({"case": "D2", "mode": "rag" if enabled else "rag_no_summary",
@@ -301,17 +316,14 @@ def main():
         for case in CASES:
             if case["id"] not in selected.intersection({"C3", "D1", "D2"}):
                 continue
-            for repeat in range(1, 4):
+            for repeat in range(1, args.repeat + 1):
                 for enabled in ([True, False] if case["id"] == "D2" else [True]):
                     result = fixture_run(case, enabled)
                     runs.append({"case": case["id"], "mode": "full", "repeat": repeat,
                                  "environment": "fixture_http", **result})
 
-    result = {"versions": {"python": sys.version.split()[0], **versions}, "fingerprint": digest,
-              "summary": summary(runs, retrieval), "retrieval": retrieval, "runs": runs}
-    args.out.parent.mkdir(exist_ok=True, parents=True)
-    args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result["summary"], ensure_ascii=False, indent=2))
+    save_results()
+    print(json.dumps(summary(runs, retrieval), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
