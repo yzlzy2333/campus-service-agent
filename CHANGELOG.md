@@ -2,6 +2,12 @@
 
 ## Unreleased - 2026-11-20
 
+### CI environment recovery
+
+- Diagnosed macOS ARM64 failures as GitHub hosted runner capacity constraints. The cancelled jobs had no assigned runner and executed no test steps.
+- Retried the affected main and macOS 26 verification jobs. Both workflows succeeded on attempt 2, and the existing branches were retained.
+- Preserved commit IDs, workflow links, error details, and recovery results in [CI_ENVIRONMENT_LOG.md](CI_ENVIRONMENT_LOG.md).
+
 ### Fixed
 
 - Prevent material checks from treating explicitly absent documents as provided, including negation before or after a material name and later corrections in the same message.
