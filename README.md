@@ -1,8 +1,22 @@
 # Campus Service Agent
 
-A command-line assistant for finding campus procedures and checking which application materials a student still needs. It covers 90 simulated services, including student records, housing, dining, campus cards, and financial aid. The guides contain fictional procedures for demonstration and do not represent any university's policies. The assistant does not submit applications.
+A command-line assistant for Windows, Linux, and macOS that helps students find campus procedures and check which application materials they still need. It covers 90 simulated services, including student records, housing, dining, campus cards, and financial aid. The guides contain fictional procedures for demonstration and do not represent any university's policies. The assistant does not submit applications.
 
 The interface and knowledge base support Mandarin. The application can run offline, or use a DeepSeek model through LangChain for tool-driven responses. Both modes share the same guides and material rules.
+
+## Supported platforms
+
+Campus Service Agent supports Windows, Linux, and macOS with Python 3.12. Offline mode and DeepSeek mode are available on all three platforms.
+
+| Platform | Deployment guide |
+| --- | --- |
+| Windows | [Windows source setup](https://github.com/yzlzy2333/campus-service-agent/blob/main/README.md#getting-started) |
+| Linux | [Linux deployment branch](https://github.com/yzlzy2333/campus-service-agent/tree/deploy/linux) |
+| macOS (Intel and Apple Silicon) | [macOS deployment branch](https://github.com/yzlzy2333/campus-service-agent/tree/deploy/macos) |
+
+The main branch includes source installation commands for all three systems. The Linux and macOS deployment branches provide platform-specific setup and launch scripts. Each target machine needs Python 3.12 and the project's dependencies.
+
+CI covers Windows, Ubuntu 24.04, Intel macOS, and Apple Silicon macOS, including dependency installation, offline startup, and regression checks. See [validation details](VALIDATION.md) and [source deployment downloads](https://github.com/yzlzy2333/campus-service-agent/releases).
 
 ## Getting started
 
