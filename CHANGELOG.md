@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased - 2026-11-21
+
+### Documentation
+
+- Added an explicit Windows, Linux, and macOS support overview to the README.
+- Included deployment links for each operating system and documented Intel and Apple Silicon support on macOS.
+- Clarified Python 3.12 requirements, source deployment packages, and the environments covered by CI.
+- Synchronized the platform overview and changelog across main, deploy/linux, and deploy/macos.
+
 ## Unreleased - 2026-11-20
 
 ### CI environment recovery
